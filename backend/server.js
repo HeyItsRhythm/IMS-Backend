@@ -17,7 +17,10 @@ import User from './models/User.js';
 
 
 const app = express();
-app.use(cors());
+app.use(cors({
+  origin: "https://ims-frontend-beta-eight.vercel.app",
+  credentials: true
+}));
 app.use(express.json());
 app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
 
