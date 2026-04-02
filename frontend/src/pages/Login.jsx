@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { LogIn, KeyRound } from 'lucide-react';
+import { LogIn, KeyRound, Layers, UserRound, Mail, Lock, Menu } from 'lucide-react';
 import emailjs from 'emailjs-com';
 
 export default function Login() {
@@ -77,81 +77,130 @@ export default function Login() {
   };
 
   return (
-    <div className="auth-container">
-      <div className="glass auth-card">
-        {step === 1 ? (
-          <>
-            <h2 className="auth-title">Welcome Back</h2>
-            {error && <div style={{ color: 'red', marginBottom: '1rem', textAlign: 'center' }}>{error}</div>}
-            <form onSubmit={handleCredentialsSubmit}>
-              <div className="form-group">
-                <label className="form-label">Email</label>
-                <input 
-                  type="email" 
-                  className="form-input" 
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required 
-                />
-              </div>
-              <div className="form-group">
-                <label className="form-label">Password</label>
-                <input 
-                  type="password" 
-                  className="form-input" 
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required 
-                />
-              </div>
-              <button type="submit" className="btn btn-primary" style={{ width: '100%', marginTop: '1rem' }}>
-                <LogIn size={20} /> Login
-              </button>
-            </form>
-            <p style={{ marginTop: '1.5rem', textAlign: 'center' }}>
-              Don't have an account? <Link to="/register" style={{ color: 'var(--primary)' }}>Register</Link>
-            </p>
-            <div style={{ marginTop: '2rem', fontSize: '0.85rem', color: 'var(--text-muted)' }}>
-              <p><strong>Demo Accounts:</strong></p>
-              <p>Admin: admin@system.com / admin123</p>
-              <p>(Or register newly as Student/Company)</p>
-            </div>
+    <div className="login-page-bg">
+      <div className="login-card">
+        {/* Left Panel */}
+        <div className="login-left">
+          <div className="login-logo">
+            <Layers size={24} color="#4F46E5" />
+            Template Design
+          </div>
+          
+          <div className="login-form-container">
+            {step === 1 ? (
+              <>
+                <div className="login-avatar">
+                  <UserRound size={40} />
+                </div>
+                
+                {error && <div style={{ color: 'red', marginBottom: '1rem', textAlign: 'center', fontSize: '0.85rem' }}>{error}</div>}
+                
+                <form onSubmit={handleCredentialsSubmit} style={{ width: '100%' }}>
+                  <div className="login-input-group">
+                    <UserRound size={18} />
+                    <input 
+                      type="email" 
+                      className="login-input" 
+                      placeholder="USERNAME"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      required 
+                    />
+                  </div>
+                  
+                  <div className="login-input-group">
+                    <Lock size={18} />
+                    <input 
+                      type="password" 
+                      className="login-input" 
+                      placeholder="********"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      required 
+                    />
+                  </div>
+                  
+                  <button type="submit" className="login-submit-btn">
+                    Login
+                  </button>
+                  
+                  <div className="login-actions">
+                    <label className="login-checkbox">
+                      <input type="checkbox" /> Remember me
+                    </label>
+                    <Link to="/forgot-password" className="login-forgot">Forgot your password?</Link>
+                  </div>
+                </form>
+              </>
+            ) : (
+              <>
+                <div className="login-avatar">
+                  <KeyRound size={40} />
+                </div>
+                
+                <h3 style={{ marginBottom: '1rem', textAlign: 'center', fontWeight: '800' }}>Verify Email</h3>
+                <p style={{ textAlign: 'center', marginBottom: '1.5rem', fontSize: '0.9rem', color: 'var(--text-muted)' }}>
+                  We've sent a 6-digit code to <strong>{email}</strong>.
+                </p>
+                {error && <div style={{ color: 'red', marginBottom: '1rem', textAlign: 'center', fontSize: '0.85rem' }}>{error}</div>}
+                
+                <form onSubmit={handleOtpSubmit} style={{ width: '100%' }}>
+                  <div className="login-input-group">
+                    <KeyRound size={18} />
+                    <input 
+                      type="text" 
+                      maxLength={6}
+                      className="login-input" 
+                      placeholder="ENTER OTP"
+                      style={{ textAlign: 'center', letterSpacing: '4px', fontSize: '1.1rem', fontWeight: 'bold' }}
+                      value={userOtp}
+                      onChange={(e) => setUserOtp(e.target.value)}
+                      required 
+                    />
+                  </div>
+                  
+                  <button type="submit" className="login-submit-btn">
+                    Verify & Login
+                  </button>
+                  
+                  <button 
+                    type="button" 
+                    className="login-submit-btn" 
+                    style={{ backgroundColor: 'transparent', color: '#64748b', border: '1px solid #cbd5e1', marginTop: '1rem' }}
+                    onClick={() => { setStep(1); setError(''); setUserOtp(''); }}
+                  >
+                    Back to Login
+                  </button>
+                </form>
+              </>
+            )}
+          </div>
+          
+          <div className="login-dots">
+            <div className="login-dot active"></div>
+            <div className="login-dot"></div>
+            <div className="login-dot"></div>
+          </div>
+        </div>
         
-          </>
-        ) : (
-          <>
-            <h2 className="auth-title">Verify Email</h2>
-            <p style={{ textAlign: 'center', marginBottom: '1rem' }}>
-              We've sent a 6-digit verification code to <strong>{email}</strong>.
+        {/* Right Panel */}
+        <div className="login-right">
+          <div className="login-nav">
+            <Link to="/register" className="login-nav-btn">SIGN UP</Link>
+            <Menu size={24} style={{ cursor: 'pointer' }} />
+          </div>
+          
+          <div className="login-welcome-container">
+            <h1 className="login-welcome-title">Welcome.</h1>
+            <p className="login-welcome-text">
+              Log in to access your internship management dashboard. Manage your applications, track progress, and connect with companies seamlessly.
             </p>
-            {error && <div style={{ color: 'red', marginBottom: '1rem', textAlign: 'center' }}>{error}</div>}
-            <form onSubmit={handleOtpSubmit}>
-              <div className="form-group">
-                <label className="form-label">6-Digit Code</label>
-                <input 
-                  type="text" 
-                  maxLength={6}
-                  className="form-input" 
-                  style={{ textAlign: 'center', letterSpacing: '4px', fontSize: '1.2rem', fontWeight: 'bold' }}
-                  value={userOtp}
-                  onChange={(e) => setUserOtp(e.target.value)}
-                  required 
-                />
-              </div>
-              <button type="submit" className="btn btn-primary" style={{ width: '100%', marginTop: '1rem' }}>
-                <KeyRound size={20} /> Verify & Login
-              </button>
-              <button 
-                type="button" 
-                className="btn btn-secondary" 
-                style={{ width: '100%', marginTop: '1rem' }}
-                onClick={() => { setStep(1); setError(''); setUserOtp(''); }}
-              >
-                Back to Login
-              </button>
-            </form>
-          </>
-        )}
+          </div>
+          
+          <div className="login-signup-link">
+            Not a member? <Link to="/register">Sign up now</Link>
+          </div>
+        </div>
       </div>
     </div>
   );
